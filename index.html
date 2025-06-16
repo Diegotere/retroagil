@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionários de Retrospectiva Ágil</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="container">
+                <h1>Questionários de Retrospectiva</h1>
+                <nav class="nav-buttons">
+                    <button id="btn-dashboard" class="btn btn--secondary btn--sm">Dashboard</button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Tela Dashboard -->
+            <div id="screen-dashboard" class="screen active">
+                <div class="dashboard-header">
+                    <h2>Meus Questionários</h2>
+                    <button id="btn-criar-questionario" class="btn btn--primary">
+                        <span>+</span> Criar Novo Questionário
+                    </button>
+                </div>
+                
+                <div id="lista-questionarios" class="questionarios-grid">
+                    <!-- Questionários serão carregados aqui -->
+                </div>
+            </div>
+
+            <!-- Tela Criação de Questionário -->
+            <div id="screen-criar" class="screen">
+                <div class="form-header">
+                    <h2>Criar Novo Questionário</h2>
+                    <button id="btn-voltar-criar" class="btn btn--outline btn--sm">← Voltar</button>
+                </div>
+
+                <form id="form-criar-questionario">
+                    <div class="form-group">
+                        <label class="form-label" for="titulo-questionario">Título do Questionário</label>
+                        <input type="text" id="titulo-questionario" class="form-control" placeholder="Ex: Retrospectiva Sprint 15" required>
+                    </div>
+
+                    <div class="perguntas-section">
+                        <h3>Perguntas</h3>
+                        <div id="lista-perguntas">
+                            <!-- Perguntas serão adicionadas aqui -->
+                        </div>
+                        <button type="button" id="btn-adicionar-pergunta" class="btn btn--secondary">
+                            + Adicionar Pergunta
+                        </button>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary">Salvar Questionário</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tela Editar Questionário -->
+            <div id="screen-editar" class="screen">
+                <div class="form-header">
+                    <h2>Editar Questionário</h2>
+                    <button id="btn-voltar-editar" class="btn btn--outline btn--sm">← Voltar</button>
+                </div>
+
+                <div id="aviso-votos" class="alert alert--warning hidden">
+                    ⚠️ Este questionário já possui votos. Alterações podem afetar os resultados.
+                </div>
+
+                <form id="form-editar-questionario">
+                    <div class="form-group">
+                        <label class="form-label" for="titulo-questionario-editar">Título do Questionário</label>
+                        <input type="text" id="titulo-questionario-editar" class="form-control" required>
+                    </div>
+
+                    <div class="perguntas-section">
+                        <h3>Perguntas</h3>
+                        <div id="lista-perguntas-editar">
+                            <!-- Perguntas serão carregadas aqui -->
+                        </div>
+                        <button type="button" id="btn-adicionar-pergunta-editar" class="btn btn--secondary">
+                            + Adicionar Pergunta
+                        </button>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tela Votação -->
+            <div id="screen-votar" class="screen">
+                <div class="votacao-header">
+                    <h2 id="titulo-votacao">Carregando...</h2>
+                    <div class="status-votacao">
+                        <span class="status status--info">Votação Ativa</span>
+                    </div>
+                </div>
+
+                <form id="form-votacao">
+                    <div id="perguntas-votacao">
+                        <!-- Perguntas para votação -->
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary btn--full-width">Confirmar Voto</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tela Resultados -->
+            <div id="screen-resultados" class="screen">
+                <div class="resultados-header">
+                    <h2 id="titulo-resultados">Resultados</h2>
+                    <div class="resultados-stats">
+                        <span id="total-participantes" class="stat">0 participantes</span>
+                    </div>
+                </div>
+
+                <div id="graficos-resultados" class="graficos-grid">
+                    <!-- Gráficos serão gerados aqui -->
+                </div>
+
+                <div class="form-actions">
+                    <button id="btn-voltar-resultados" class="btn btn--outline">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- Tela Sucesso Votação -->
+            <div id="screen-sucesso" class="screen">
+                <div class="sucesso-content">
+                    <div class="sucesso-icon">✓</div>
+                    <h2>Voto Registrado com Sucesso!</h2>
+                    <p>Obrigado por participar da retrospectiva.</p>
+                    <button id="btn-ver-resultados-sucesso" class="btn btn--primary">Ver Resultados</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal de Confirmação -->
+        <div id="modal-confirmacao" class="modal hidden">
+            <div class="modal-content">
+                <h3 id="modal-titulo">Confirmar Ação</h3>
+                <p id="modal-mensagem">Tem certeza que deseja continuar?</p>
+                <div class="modal-actions">
+                    <button id="modal-cancelar" class="btn btn--outline">Cancelar</button>
+                    <button id="modal-confirmar" class="btn btn--primary">Confirmar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Compartilhar -->
+        <div id="modal-compartilhar" class="modal hidden">
+            <div class="modal-content">
+                <h3>Compartilhar Questionário</h3>
+                <p>Copie o link abaixo para compartilhar:</p>
+                <div class="link-container">
+                    <input type="text" id="link-compartilhar" class="form-control" readonly>
+                    <button id="btn-copiar-link" class="btn btn--secondary btn--sm">Copiar</button>
+                </div>
+                <div class="modal-actions">
+                    <button id="modal-fechar-compartilhar" class="btn btn--outline">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
